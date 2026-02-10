@@ -1,110 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Valentine 💖</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh; 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      font-family: 'Arial', sans-serif;
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<title>My Valentine 💖</title>
 
-    .card {
-      background: white;
-      padding: 30px 40px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+  }
 
-    h1 {
-      color: #ff4d6d;
-      margin-bottom: 10px;
-    }
+  .card {
+    background: white;
+    padding: 40px 50px;
+    border-radius: 30px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    max-width: 90%;
+  }
 
-    p {
-      font-size: 18px;
-      margin-bottom: 25px;
-    }
+  h1 {
+    font-size: 36px;
+    color: #ff2d55;
+    margin-bottom: 10px;
+  }
 
-    button {
-      padding: 12px 25px;
-      font-size: 16px;
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-      position: relative;
-    }
+  p {
+    font-size: 22px;
+    margin-bottom: 35px;
+  }
 
-    #yesBtn {
-      background: #ff4d6d;
-      color: white;
-      margin-right: 15px;
-    }
+  button {
+    font-size: 26px;
+    padding: 20px 45px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+  }
 
-    #noBtn {
-      background: #adb5bd;
-      color: white;
-      position: absolute;
-    }
+  #yesBtn {
+    background: #ff2d55;
+    color: white;
+    margin-right: 20px;
+  }
 
-    .celebration {
-      display: none;
-      font-size: 30px;
-      color: #ff4d6d;
-      margin-top: 20px;
-    }
-  </style>
+  #noBtn {
+    background: #adb5bd;
+    color: white;
+    position: absolute;
+  }
+
+  .celebration {
+    display: none;
+    font-size: 42px;
+    color: #ff2d55;
+    font-weight: bold;
+    margin-top: 30px;
+  }
+</style>
 </head>
+
 <body>
 
-  <div class="card">
-    <h1>💌 Will you be my Valentine?</h1>
-    <p>Love, Michael</p>
+<div class="card">
+  <h1>💌 Will you be my Valentine?</h1>
+  <p>Love, Michael</p>
 
-    <button id="yesBtn">Yes 💖</button>
-    <button id="noBtn">No 😢</button>
+  <button id="yesBtn">YES 💖</button>
+  <button id="noBtn">NO 😢</button>
 
-    <div class="celebration" id="celebration">
-      🎉 Yay!!! I knew it! 💕🎉
-    </div>
+  <div class="celebration" id="celebration">
+    🎉 SHE SAID YES!!! 💕🎉<br>
+    I LOVE YOU 💖
   </div>
+</div>
 
-  <script>
-    const noBtn = document.getElementById("noBtn");
-    const yesBtn = document.getElementById("yesBtn");
-    const celebration = document.getElementById("celebration");
+<script>
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const celebration = document.getElementById("celebration");
 
-    // Make NO button dodge
-    noBtn.addEventListener("mouseover", () => {
-      const x = Math.random() * (window.innerWidth - 100);
-      const y = Math.random() * (window.innerHeight - 50);
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top = `${y}px`;
-    });
+  function moveNoButton() {
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 80);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  }
 
-    // YES button celebration
-    yesBtn.addEventListener("click", () => {
-      celebration.style.display = "block";
-      yesBtn.style.display = "none";
-      noBtn.style.display = "none";
-      startConfetti();
-    });
+  // Dodge on hover AND touch (mobile)
+  noBtn.addEventListener("mouseover", moveNoButton);
+  noBtn.addEventListener("touchstart", moveNoButton);
 
-    // Simple confetti effect
-    function startConfetti() {
-      for (let i = 0; i < 150; i++) {
-        const confetti = document.createElement("div");
-        confetti.style.position = "absolute";
-        confetti.style.width = "8px";
-        confetti.style.height = "8px";
-        confetti.style.backgroundColor =
+  yesBtn.addEventListener("click", () => {
+    yesBtn.style.display = "none";
+    noBtn.style.display = "none";
+    celebration.style.display = "block";
+    launchConfetti();
+  });
+
+  function launchConfetti() {
+    for (let i = 0; i < 250; i++) {
+      const confetti = document.createElement("div");
+      confetti.style.position = "absolute";
+      confetti.style.width = "12px";
+      confetti.style.height = "12px";
+      confetti.style.borderRadius = "50%";
+      confetti.style.backgroundColor =
+        `hsl(${Math.random() * 360}, 100%, 50%)`;
+      confetti.style.left = Math.random() * window.innerWidth + "px";
+      confetti.style.top = "-10px";
+
+      document.body.appendChild(confetti);
+
+      let speed = Math.random() * 4 + 3;
+      let fall = setInterval(() => {
+        confetti.style.top = confetti.offsetTop + speed + "px";
+        if (confetti.offsetTop > window.innerHeight) {
+          confetti.remove();
+          clearInterval(fall);
+        }
+      }, 16);
+    }
+  }
+</script>
+
+</body>
+</html>
           `hsl(${Math.random() * 360}, 100%, 50%)`;
         confetti.style.left = Math.random() * window.innerWidth + "px";
         confetti.style.top = "-10px";
