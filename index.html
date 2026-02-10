@@ -6,87 +6,83 @@
     <title>Be My Valentine?</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
             margin: 0;
-            background-color: #ffe4e1;
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
-            text-align: center;
-        }
-
-        h1 {
-            color: #d00000;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .container {
-            position: relative;
-        }
-
-        .buttons {
+            height: 100vh;
             display: flex;
-            gap: 20px;
             align-items: center;
             justify-content: center;
+            background-color: #ffb6c1; /* Soft Pink */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            z-index: 5;
+            min-width: 300px;
+        }
+
+        h1 { color: #d00000; margin-bottom: 5px; }
+        p { color: #555; margin-bottom: 20px; font-weight: bold; }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            height: 100px; /* Space for scaling button */
         }
 
         button {
             padding: 15px 30px;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: bold;
             border: none;
-            border-radius: 10px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s ease;
+            transition: 0.2s;
         }
 
         #yesBtn {
-            background-color: #4CAF50;
+            background-color: #ff4d6d;
             color: white;
-            z-index: 10;
         }
 
         #noBtn {
-            background-color: #f44336;
+            background-color: #adb5bd;
             color: white;
-            position: absolute;
+            position: absolute; /* Allows it to dodge */
         }
 
         #celebration {
             display: none;
-            font-size: 3rem;
-            animation: pop 0.5s ease-out;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
         }
-
-        @keyframes pop {
-            0% { transform: scale(0); }
-            100% { transform: scale(1); }
-        }
-
-        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div id="main-content">
-        <h1>Will you be my Valentine? <br> <span style="font-size: 1.5rem;">Love, Michael</span></h1>
-        <div class="container">
-            <div class="buttons">
-                <button id="yesBtn">YES</button>
-                <button id="noBtn">NO</button>
-            </div>
+    <div id="main-content" class="card">
+        <h1>💌 Will you be my Valentine?</h1>
+        <p>Love, Michael</p>
+        <div class="btn-container">
+            <button id="yesBtn">YES 💖</button>
+            <button id="noBtn">NO 😢</button>
         </div>
     </div>
 
     <div id="celebration">
-        <h1>🎉 YAY! 🎉</h1>
-        <p>❤️ See you on the 14th! ❤️</p>
-        <div style="font-size: 5rem;">💏🌹✨</div>
+        <h1 style="font-size: 4rem;">🎉 YAY! 🎉</h1>
+        <p style="font-size: 2rem; color: #d00000;">I knew you'd say yes! ❤️</p>
     </div>
 
     <script>
@@ -95,50 +91,57 @@
         const mainContent = document.getElementById('main-content');
         const celebration = document.getElementById('celebration');
 
-        let yesSize = 1.5;
+        let scale = 1;
 
-        // The No Button Dodges
-        noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('touchstart', moveButton);
-
-        function moveButton() {
-            // Calculate random positions
+        // Function to move the No button
+        function moveNoButton() {
+            // Dodge logic
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
             const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
             
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
-            
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+
             // Increase Yes button size
-            yesSize += 0.5;
-            yesBtn.style.transform = `scale(${yesSize})`;
+            scale += 0.4;
+            yesBtn.style.transform = `scale(${scale})`;
         }
 
-        // The Yes Button Celebration
-        yesBtn.addEventListener('click', () => {
-            mainContent.classList.add('hidden');
-            celebration.style.display = 'block';
-            document.body.style.backgroundColor = '#ffb6c1';
-            
-            // Add some confetti effect (Simple version)
-            setInterval(createHeart, 300);
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Prevents clicking on mobile
+            moveNoButton();
         });
 
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.innerHTML = '❤️';
-            heart.style.position = 'fixed';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.top = '100vh';
-            heart.style.fontSize = Math.random() * 20 + 20 + 'px';
-            heart.style.transition = 'transform 3s linear';
-            document.body.appendChild(heart);
+        yesBtn.addEventListener('click', () => {
+            mainContent.style.display = 'none';
+            celebration.style.display = 'block';
+            startHearts();
+        });
 
-            setTimeout(() => {
-                heart.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
+        // Simple Celebration "Confetti"
+        function startHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.style.position = 'fixed';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = '100vh';
+                heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                heart.style.zIndex = '1000';
+                document.body.appendChild(heart);
+
+                const duration = Math.random() * 3 + 2;
+                heart.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(-110vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'linear'
+                });
+
+                setTimeout(() => heart.remove(), duration * 1000);
             }, 100);
-
-            setTimeout(() => { heart.remove(); }, 4000);
         }
     </script>
 </body>
