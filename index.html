@@ -3,146 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Be My Valentine?</title>
+    <title>Valentine Michael</title>
     <style>
+        /* This section makes everything look pretty */
         body {
             margin: 0;
-            height: 100vh;
+            padding: 0;
             display: flex;
-            align-items: center;
             justify-content: center;
-            background-color: #ffb6c1; /* Soft Pink */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffc0cb; /* Pink background */
+            font-family: sans-serif;
             overflow: hidden;
         }
 
-        .card {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        .container {
             text-align: center;
-            z-index: 5;
-            min-width: 300px;
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 10;
         }
 
-        h1 { color: #d00000; margin-bottom: 5px; }
-        p { color: #555; margin-bottom: 20px; font-weight: bold; }
+        h1 {
+            color: #e91e63;
+            font-size: 2.5rem;
+        }
 
-        .btn-container {
+        .btn-group {
+            margin-top: 30px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
-            height: 100px; /* Space for scaling button */
+            gap: 30px;
         }
 
         button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 20px 40px;
+            font-size: 1.5rem;
             font-weight: bold;
+            border-radius: 15px;
             border: none;
-            border-radius: 50px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.1s;
         }
 
         #yesBtn {
-            background-color: #ff4d6d;
+            background-color: #4CAF50;
             color: white;
         }
 
         #noBtn {
-            background-color: #adb5bd;
+            background-color: #f44336;
             color: white;
-            position: absolute; /* Allows it to dodge */
+            position: absolute; /* This is key for the dodging effect */
         }
 
         #celebration {
             display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             text-align: center;
-            z-index: 100;
         }
     </style>
 </head>
 <body>
 
-    <div id="main-content" class="card">
-        <h1>💌 Will you be my Valentine?</h1>
-        <p>Love, Michael</p>
-        <div class="btn-container">
-            <button id="yesBtn">YES 💖</button>
-            <button id="noBtn">NO 😢</button>
+    <div id="quiz">
+        <div class="container">
+            <h1>💌 Will you be my Valentine?</h1>
+            <p style="font-size: 1.2rem;">- Love, Michael</p>
+            <div class="btn-group">
+                <button id="yesBtn">YES</button>
+                <button id="noBtn">NO</button>
+            </div>
         </div>
     </div>
 
     <div id="celebration">
-        <h1 style="font-size: 4rem;">🎉 YAY! 🎉</h1>
-        <p style="font-size: 2rem; color: #d00000;">I knew you'd say yes! ❤️</p>
+        <h1 style="font-size: 5rem;">🎉 YES! ❤️</h1>
+        <p style="font-size: 2rem;">I love you!</p>
     </div>
 
     <script>
         const yesBtn = document.getElementById('yesBtn');
         const noBtn = document.getElementById('noBtn');
-        const mainContent = document.getElementById('main-content');
+        const quiz = document.getElementById('quiz');
         const celebration = document.getElementById('celebration');
+        
+        let scaleSize = 1;
 
-        let scale = 1;
-
-        // Function to move the No button
-        function moveNoButton() {
-            // Dodge logic
+        // Function to make the NO button run away
+        function moveNo() {
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
             const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
             
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
 
-            // Increase Yes button size
-            scale += 0.4;
-            yesBtn.style.transform = `scale(${scale})`;
+            // Make the YES button grow!
+            scaleSize += 0.5;
+            yesBtn.style.transform = `scale(${scaleSize})`;
         }
 
-        noBtn.addEventListener('mouseover', moveNoButton);
-        noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Prevents clicking on mobile
-            moveNoButton();
-        });
+        noBtn.addEventListener('mouseover', moveNo);
+        noBtn.addEventListener('click', moveNo); // For mobile users who tap it
 
+        // When YES is finally clicked
         yesBtn.addEventListener('click', () => {
-            mainContent.style.display = 'none';
+            quiz.style.display = 'none';
             celebration.style.display = 'block';
-            startHearts();
+            document.body.style.backgroundColor = '#ff69b4';
         });
-
-        // Simple Celebration "Confetti"
-        function startHearts() {
-            setInterval(() => {
-                const heart = document.createElement('div');
-                heart.innerHTML = '❤️';
-                heart.style.position = 'fixed';
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.top = '100vh';
-                heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
-                heart.style.zIndex = '1000';
-                document.body.appendChild(heart);
-
-                const duration = Math.random() * 3 + 2;
-                heart.animate([
-                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-                    { transform: `translateY(-110vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-                ], {
-                    duration: duration * 1000,
-                    easing: 'linear'
-                });
-
-                setTimeout(() => heart.remove(), duration * 1000);
-            }, 100);
-        }
     </script>
 </body>
 </html>
