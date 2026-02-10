@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Valentine Michael</title>
     <style>
-        /* This section makes everything look pretty */
         body {
             margin: 0;
             padding: 0;
@@ -13,7 +12,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #ffc0cb; /* Pink background */
+            background-color: #ffc0cb;
             font-family: sans-serif;
             overflow: hidden;
         }
@@ -21,45 +20,47 @@
         .container {
             text-align: center;
             background: white;
-            padding: 40px;
+            padding: 50px;
             border-radius: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            position: relative;
-            z-index: 10;
+            width: 80%;
+            max-width: 400px;
         }
 
-        h1 {
-            color: #e91e63;
-            font-size: 2.5rem;
-        }
+        h1 { color: #e91e63; font-size: 2rem; }
 
-        .btn-group {
-            margin-top: 30px;
+        /* This area holds the buttons and prevents overlapping at the start */
+        .btn-wrapper {
+            margin-top: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 30px;
+            gap: 40px; /* Space between buttons */
+            min-height: 150px; /* Space for the Yes button to grow */
+            position: relative;
         }
 
         button {
-            padding: 20px 40px;
-            font-size: 1.5rem;
+            padding: 15px 30px;
+            font-size: 1.2rem;
             font-weight: bold;
-            border-radius: 15px;
+            border-radius: 12px;
             border: none;
             cursor: pointer;
-            transition: 0.1s;
         }
 
         #yesBtn {
             background-color: #4CAF50;
             color: white;
+            z-index: 2; /* Keeps it on top */
+            transition: transform 0.2s ease;
         }
 
         #noBtn {
             background-color: #f44336;
             color: white;
-            position: absolute; /* This is key for the dodging effect */
+            transition: 0.1s;
+            z-index: 1;
         }
 
         #celebration {
@@ -73,8 +74,8 @@
     <div id="quiz">
         <div class="container">
             <h1>💌 Will you be my Valentine?</h1>
-            <p style="font-size: 1.2rem;">- Love, Michael</p>
-            <div class="btn-group">
+            <p>- Love, Michael</p>
+            <div class="btn-wrapper">
                 <button id="yesBtn">YES</button>
                 <button id="noBtn">NO</button>
             </div>
@@ -82,8 +83,8 @@
     </div>
 
     <div id="celebration">
-        <h1 style="font-size: 5rem;">🎉 YES! ❤️</h1>
-        <p style="font-size: 2rem;">I love you!</p>
+        <h1 style="font-size: 4rem;">🎉 YAY! 🎉</h1>
+        <p style="font-size: 2rem; color: white;">See you on the 14th! ❤️</p>
     </div>
 
     <script>
@@ -93,24 +94,37 @@
         const celebration = document.getElementById('celebration');
         
         let scaleSize = 1;
+        let moved = false;
 
-        // Function to make the NO button run away
         function moveNo() {
+            // Change position to absolute only AFTER the first interaction
+            if (!moved) {
+                noBtn.style.position = 'absolute';
+                moved = true;
+            }
+
+            // Calculate random coordinates
+            // Subtracting button size so it doesn't go off-screen
             const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
             const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
             
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
 
-            // Make the YES button grow!
-            scaleSize += 0.5;
+            // Make the YES button grow
+            scaleSize += 0.4;
             yesBtn.style.transform = `scale(${scaleSize})`;
         }
 
+        // Mouse dodge for computers
         noBtn.addEventListener('mouseover', moveNo);
-        noBtn.addEventListener('click', moveNo); // For mobile users who tap it
+        
+        // Tap dodge for mobile phones
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Stop the actual click
+            moveNo();
+        });
 
-        // When YES is finally clicked
         yesBtn.addEventListener('click', () => {
             quiz.style.display = 'none';
             celebration.style.display = 'block';
