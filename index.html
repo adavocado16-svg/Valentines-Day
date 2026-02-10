@@ -1,158 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>My Valentine 💖</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffe4e1;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
 
-<style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Arial', sans-serif;
-    overflow: hidden;
-  }
+        h1 {
+            color: #d00000;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
 
-  .card {
-    background: white;
-    padding: 40px 50px;
-    border-radius: 30px;
-    text-align: center;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-    max-width: 90%;
-  }
+        .container {
+            position: relative;
+        }
 
-  h1 {
-    font-size: 36px;
-    color: #ff2d55;
-    margin-bottom: 10px;
-  }
+        .buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+        }
 
-  p {
-    font-size: 22px;
-    margin-bottom: 35px;
-  }
+        button {
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
 
-  button {
-    font-size: 26px;
-    padding: 20px 45px;
-    border-radius: 50px;
-    border: none;
-    cursor: pointer;
-  }
+        #yesBtn {
+            background-color: #4CAF50;
+            color: white;
+            z-index: 10;
+        }
 
-  #yesBtn {
-    background: #ff2d55;
-    color: white;
-    margin-right: 20px;
-  }
+        #noBtn {
+            background-color: #f44336;
+            color: white;
+            position: absolute;
+        }
 
-  #noBtn {
-    background: #adb5bd;
-    color: white;
-    position: absolute;
-  }
+        #celebration {
+            display: none;
+            font-size: 3rem;
+            animation: pop 0.5s ease-out;
+        }
 
-  .celebration {
-    display: none;
-    font-size: 42px;
-    color: #ff2d55;
-    font-weight: bold;
-    margin-top: 30px;
-  }
-</style>
+        @keyframes pop {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        .hidden { display: none; }
+    </style>
 </head>
-
 <body>
 
-<div class="card">
-  <h1>💌 Will you be my Valentine?</h1>
-  <p>Love, Michael</p>
+    <div id="main-content">
+        <h1>Will you be my Valentine? <br> <span style="font-size: 1.5rem;">Love, Michael</span></h1>
+        <div class="container">
+            <div class="buttons">
+                <button id="yesBtn">YES</button>
+                <button id="noBtn">NO</button>
+            </div>
+        </div>
+    </div>
 
-  <button id="yesBtn">YES 💖</button>
-  <button id="noBtn">NO 😢</button>
+    <div id="celebration">
+        <h1>🎉 YAY! 🎉</h1>
+        <p>❤️ See you on the 14th! ❤️</p>
+        <div style="font-size: 5rem;">💏🌹✨</div>
+    </div>
 
-  <div class="celebration" id="celebration">
-    🎉 SHE SAID YES!!! 💕🎉<br>
-    I LOVE YOU 💖
-  </div>
-</div>
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const mainContent = document.getElementById('main-content');
+        const celebration = document.getElementById('celebration');
 
-<script>
-  const noBtn = document.getElementById("noBtn");
-  const yesBtn = document.getElementById("yesBtn");
-  const celebration = document.getElementById("celebration");
+        let yesSize = 1.5;
 
-  function moveNoButton() {
-    const x = Math.random() * (window.innerWidth - 120);
-    const y = Math.random() * (window.innerHeight - 80);
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  }
+        // The No Button Dodges
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', moveButton);
 
-  // Dodge on hover AND touch (mobile)
-  noBtn.addEventListener("mouseover", moveNoButton);
-  noBtn.addEventListener("touchstart", moveNoButton);
-
-  yesBtn.addEventListener("click", () => {
-    yesBtn.style.display = "none";
-    noBtn.style.display = "none";
-    celebration.style.display = "block";
-    launchConfetti();
-  });
-
-  function launchConfetti() {
-    for (let i = 0; i < 250; i++) {
-      const confetti = document.createElement("div");
-      confetti.style.position = "absolute";
-      confetti.style.width = "12px";
-      confetti.style.height = "12px";
-      confetti.style.borderRadius = "50%";
-      confetti.style.backgroundColor =
-        `hsl(${Math.random() * 360}, 100%, 50%)`;
-      confetti.style.left = Math.random() * window.innerWidth + "px";
-      confetti.style.top = "-10px";
-
-      document.body.appendChild(confetti);
-
-      let speed = Math.random() * 4 + 3;
-      let fall = setInterval(() => {
-        confetti.style.top = confetti.offsetTop + speed + "px";
-        if (confetti.offsetTop > window.innerHeight) {
-          confetti.remove();
-          clearInterval(fall);
+        function moveButton() {
+            // Calculate random positions
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+            
+            // Increase Yes button size
+            yesSize += 0.5;
+            yesBtn.style.transform = `scale(${yesSize})`;
         }
-      }, 16);
-    }
-  }
-</script>
 
-</body>
-</html>
-          `hsl(${Math.random() * 360}, 100%, 50%)`;
-        confetti.style.left = Math.random() * window.innerWidth + "px";
-        confetti.style.top = "-10px";
-        confetti.style.opacity = Math.random();
-        confetti.style.borderRadius = "50%";
+        // The Yes Button Celebration
+        yesBtn.addEventListener('click', () => {
+            mainContent.classList.add('hidden');
+            celebration.style.display = 'block';
+            document.body.style.backgroundColor = '#ffb6c1';
+            
+            // Add some confetti effect (Simple version)
+            setInterval(createHeart, 300);
+        });
 
-        document.body.appendChild(confetti);
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.fontSize = Math.random() * 20 + 20 + 'px';
+            heart.style.transition = 'transform 3s linear';
+            document.body.appendChild(heart);
 
-        let fall = Math.random() * 3 + 2;
-        let interval = setInterval(() => {
-          confetti.style.top =
-            confetti.offsetTop + fall + "px";
+            setTimeout(() => {
+                heart.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
+            }, 100);
 
-          if (confetti.offsetTop > window.innerHeight) {
-            confetti.remove();
-            clearInterval(interval);
-          }
-        }, 16);
-      }
-    }
-  </script>
-
+            setTimeout(() => { heart.remove(); }, 4000);
+        }
+    </script>
 </body>
 </html>
